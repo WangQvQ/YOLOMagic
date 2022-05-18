@@ -1,4 +1,5 @@
 # 分享一些关于改进Yolov5的tricks以及实验结果
+# Share some tricks of improving Yolov5  and experiment results
 
 ## 《Yolov5实验数据全部开源》
 
