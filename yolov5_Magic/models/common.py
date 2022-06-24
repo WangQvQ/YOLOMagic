@@ -70,7 +70,22 @@ class DWConv(Conv):
     def __init__(self, c1, c2, k=1, s=1, act=True):  # ch_in, ch_out, kernel, stride, padding, groups
         super().__init__(c1, c2, k, s, g=math.gcd(c1, c2), act=act)
 
+#——————————————————————————————Inception_Conv
+class Inception_Conv(nn.Module):
+    
+    def __init__(self, c1, c2, k=3, s=2, g=1, p=None):  # ch_in, ch_out, kernel, stride, padding, groups
+        super().__init__()
 
+        self.conv1 = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=False)
+        self.conv2 = nn.Conv2d(c1, c2, k , s, autopad(k+2 , p),dilation=2, groups=g, bias=False)
+
+    def forward(self, x):
+        x1 = self.conv1(x)
+        x2 = self.conv2(x)
+        x = torch.add(x1, x2)
+        return x
+#——————————————————————————————Inception_Conv-end
+        
 class TransformerLayer(nn.Module):
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
     def __init__(self, c, num_heads):
