@@ -68,7 +68,7 @@
 | Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     | Nan           | Nan    |
 
 ------
-
+🍀2022年6月24日 添加了Inception_Conv模块，替换了第一层的6x6卷积，新的模块比6x6卷积参数量减少了一半
 
 还有一些其他tircks的实验结果我正在整理中，后续我会更新在Github的
 
