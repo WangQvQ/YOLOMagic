@@ -269,7 +269,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                  BottleneckCSP, C3, C3TR, C3SPP, C3Ghost, C3x, 
                  SE, CBAM, ECA, CoordAtt,
                  C3CA,C3ECA,C3CBAM,C3SE,
-                Inception_Conv):
+                Inception_Conv,nn.ConvTranspose2d):
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
                 c2 = make_divisible(c2 * gw, 8)
@@ -279,6 +279,9 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                      C3CA,C3ECA,C3CBAM,C3SE]:
                 args.insert(2, n)  # number of repeats
                 n = 1
+            elif m is nn.ConvTranspose2d:
+                if len(args) >= 7:
+                    args[6] = make_divisible(args[6] * gw, 8)
         elif m is nn.BatchNorm2d:
             args = [ch[f]]
         elif m is Concat:
