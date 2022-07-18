@@ -1,4 +1,3 @@
-
 # Parameters
 nc: 20  # number of classes
 depth_multiple: 0.33  # model depth multiple
@@ -20,7 +19,7 @@ backbone:
    [-1, 9, C3, [512]],
    [-1, 1, Conv, [1024, 3, 2]],  # 7-P5/32
    [-1, 3, C3, [1024]],
-   [-1,1,SE,[1024]],
+   [-1, 1, SE, [1024]], #替换为CBAM/ECA/CA等均可
    [-1, 1, SPPF, [1024, 5]],  # 10
   ]
 
