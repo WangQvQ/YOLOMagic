@@ -25,7 +25,11 @@
 
 7.[Yolo v5 (v6.1)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
 
-8.持续更新中
+8.[Yolov5更换上采样方式](https://blog.csdn.net/weixin_43694096/article/details/125416120)
+
+9.[Yolov5如何更换EIOU/alpha IOU/SIoU？](https://blog.csdn.net/weixin_43694096/article/details/124902685)
+
+10.持续更新中
 
 ------
 
@@ -34,7 +38,8 @@
 这里简单展示一些数据集的内容
 
 
-![image](https://user-images.githubusercontent.com/58406737/168735743-5348e476-1e31-4b78-84b7-ff7276e40dc4.png)
+
+![image](https://user-images.githubusercontent.com/58406737/180331142-1c20eb86-d798-41ea-8cdd-dcc20dc3bdf3.png)
 
 
 
@@ -57,7 +62,7 @@
 
 实验结果
 
-| Model             | epoch | freeze | multi_scale | mAP 0.5   | Parameters(M) | GFLOPs |
+| Model             | epoch | freeze | multi_scale | mAP 0.5(val)  | Parameters(M) | GFLOPs |
 | ----------------- | ----- | ------ | ----------- | --------- | ------------- | ------ |
 | Yolov5s           | 300   | 0      | false       | **0.953** | Nan           | Nan    |
 | Yolov5s           | 120   | 8      | false       | 0.936     | Nan           | Nan    |
