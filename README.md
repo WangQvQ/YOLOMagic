@@ -25,7 +25,7 @@
 
 7.[Yolo v5 (v6.1)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
 
-8.[Yolov5更换上采样方式](https://blog.csdn.net/weixin_43694096/article/details/125416120)
+8.[Yolov5更换上采样方式( 最近邻 / 双线性 / 双立方 / 三线性 /转置卷积)](https://blog.csdn.net/weixin_43694096/article/details/125416120)
 
 9.[Yolov5如何更换EIOU/alpha IOU/SIoU？](https://blog.csdn.net/weixin_43694096/article/details/124902685)
 
