@@ -266,17 +266,18 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
 
         n = n_ = max(round(n * gd), 1) if n > 1 else n  # depth gain
         if m in (Conv, GhostConv, Bottleneck, GhostBottleneck, SPP, SPPF, DWConv, MixConv2d, Focus, CrossConv,
-                 BottleneckCSP, C3, C3TR, C3SPP, C3Ghost, C3x, 
+                 BottleneckCSP, C3, C3TR, C3SPP, C3Ghost, C3x,
                  SE, CBAM, ECA, CoordAtt,
-                 C3CA,C3ECA,C3CBAM,C3SE,
-                Inception_Conv,nn.ConvTranspose2d):
+                 C3CA, C3ECA, C3CBAM, C3SE,
+                 Inception_Conv, nn.ConvTranspose2d, CARAFE, CBRM, Shuffle_Block,
+                 ASPP, BasicRFB, SPPCSPC, SPPCSPC_group):
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
                 c2 = make_divisible(c2 * gw, 8)
 
             args = [c1, c2, *args[1:]]
             if m in [BottleneckCSP, C3, C3TR, C3Ghost, C3x,
-                     C3CA,C3ECA,C3CBAM,C3SE]:
+                     C3CA, C3ECA, C3CBAM, C3SE]:
                 args.insert(2, n)  # number of repeats
                 n = 1
             elif m is nn.ConvTranspose2d:
@@ -315,7 +316,8 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cfg', type=str, default='yolov5s.yaml', help='model.yaml')
+    parser.add_argument('--cfg', type=str, default='D:\GitHub\Yolov5_Magic\models\yolov5_ASPP.yaml',
+                        help='model.yaml')
     parser.add_argument('--batch-size', type=int, default=1, help='total batch size for all GPUs')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--profile', action='store_true', help='profile model speed')
@@ -346,6 +348,3 @@ if __name__ == '__main__':
 
     else:  # report fused model summary
         model.fuse()
-
-
-

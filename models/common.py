@@ -26,7 +26,7 @@ from utils.general import (LOGGER, check_requirements, check_suffix, check_versi
                            make_divisible, non_max_suppression, scale_coords, xywh2xyxy, xyxy2xywh)
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import copy_attr, time_sync
-
+import torch.nn.functional as F
 
 def autopad(k, p=None):  # kernel, padding
     # Pad to 'same'
@@ -1087,3 +1087,263 @@ class C3ECA(C3):
         c_ = int(c2 * e)  # hidden channels
         self.m = nn.Sequential(*(ECABottleneck(c_, c_, shortcut) for _ in range(n)))
 
+class CARAFE(nn.Module):
+    #CARAFE: Content-Aware ReAssembly of FEatures       https://arxiv.org/pdf/1905.02188.pdf
+    def __init__(self, c1, c2, kernel_size=3, up_factor=2):
+        super(CARAFE, self).__init__()
+        self.kernel_size = kernel_size
+        self.up_factor = up_factor
+        self.down = nn.Conv2d(c1, c1 // 4, 1)
+        self.encoder = nn.Conv2d(c1 // 4, self.up_factor ** 2 * self.kernel_size ** 2,
+                                 self.kernel_size, 1, self.kernel_size // 2)
+        self.out = nn.Conv2d(c1, c2, 1)
+
+    def forward(self, x):
+        N, C, H, W = x.size()
+        # N,C,H,W -> N,C,delta*H,delta*W
+        # kernel prediction module
+        kernel_tensor = self.down(x)  # (N, Cm, H, W)
+        kernel_tensor = self.encoder(kernel_tensor)  # (N, S^2 * Kup^2, H, W)
+        kernel_tensor = F.pixel_shuffle(kernel_tensor, self.up_factor)  # (N, S^2 * Kup^2, H, W)->(N, Kup^2, S*H, S*W)
+        kernel_tensor = F.softmax(kernel_tensor, dim=1)  # (N, Kup^2, S*H, S*W)
+        kernel_tensor = kernel_tensor.unfold(2, self.up_factor, step=self.up_factor) # (N, Kup^2, H, W*S, S)
+        kernel_tensor = kernel_tensor.unfold(3, self.up_factor, step=self.up_factor) # (N, Kup^2, H, W, S, S)
+        kernel_tensor = kernel_tensor.reshape(N, self.kernel_size ** 2, H, W, self.up_factor ** 2) # (N, Kup^2, H, W, S^2)
+        kernel_tensor = kernel_tensor.permute(0, 2, 3, 1, 4)  # (N, H, W, Kup^2, S^2)
+
+        # content-aware reassembly module
+        # tensor.unfold: dim, size, step
+        x = F.pad(x, pad=(self.kernel_size // 2, self.kernel_size // 2,
+                                          self.kernel_size // 2, self.kernel_size // 2),
+                          mode='constant', value=0) # (N, C, H+Kup//2+Kup//2, W+Kup//2+Kup//2)
+        x = x.unfold(2, self.kernel_size, step=1) # (N, C, H, W+Kup//2+Kup//2, Kup)
+        x = x.unfold(3, self.kernel_size, step=1) # (N, C, H, W, Kup, Kup)
+        x = x.reshape(N, C, H, W, -1) # (N, C, H, W, Kup^2)
+        x = x.permute(0, 2, 3, 1, 4)  # (N, H, W, C, Kup^2)
+
+        out_tensor = torch.matmul(x, kernel_tensor)  # (N, H, W, C, S^2)
+        out_tensor = out_tensor.reshape(N, H, W, -1)
+        out_tensor = out_tensor.permute(0, 3, 1, 2)
+        out_tensor = F.pixel_shuffle(out_tensor, self.up_factor)
+        out_tensor = self.out(out_tensor)
+        #print("up shape:",out_tensor.shape)
+        return out_tensor
+
+
+# 通道重排，跨group信息交流
+def channel_shuffle(x, groups):
+    batchsize, num_channels, height, width = x.data.size()
+    channels_per_group = num_channels // groups
+
+    # reshape
+    x = x.view(batchsize, groups,
+               channels_per_group, height, width)
+
+    x = torch.transpose(x, 1, 2).contiguous()
+
+    # flatten
+    x = x.view(batchsize, -1, height, width)
+
+    return x
+
+
+class CBRM(nn.Module):           #conv BN ReLU Maxpool2d
+    def __init__(self, c1, c2):  # ch_in, ch_out
+        super(CBRM, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(c1, c2, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(c2),
+            nn.ReLU(inplace=True),
+        )
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+
+    def forward(self, x):
+        return self.maxpool(self.conv(x))
+
+
+class Shuffle_Block(nn.Module):
+    def __init__(self, ch_in, ch_out, stride):
+        super(Shuffle_Block, self).__init__()
+
+        if not (1 <= stride <= 2):
+            raise ValueError('illegal stride value')
+        self.stride = stride
+
+        branch_features = ch_out // 2
+        assert (self.stride != 1) or (ch_in == branch_features << 1)
+
+        if self.stride > 1:
+            self.branch1 = nn.Sequential(
+                self.depthwise_conv(ch_in, ch_in, kernel_size=3, stride=self.stride, padding=1),
+                nn.BatchNorm2d(ch_in),
+
+                nn.Conv2d(ch_in, branch_features, kernel_size=1, stride=1, padding=0, bias=False),
+                nn.BatchNorm2d(branch_features),
+                nn.ReLU(inplace=True),
+            )
+
+        self.branch2 = nn.Sequential(
+            nn.Conv2d(ch_in if (self.stride > 1) else branch_features,
+                      branch_features, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(branch_features),
+            nn.ReLU(inplace=True),
+
+            self.depthwise_conv(branch_features, branch_features, kernel_size=3, stride=self.stride, padding=1),
+            nn.BatchNorm2d(branch_features),
+
+            nn.Conv2d(branch_features, branch_features, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(branch_features),
+            nn.ReLU(inplace=True),
+        )
+
+    @staticmethod
+    def depthwise_conv(i, o, kernel_size, stride=1, padding=0, bias=False):
+        return nn.Conv2d(i, o, kernel_size, stride, padding, bias=bias, groups=i)
+
+    def forward(self, x):
+        if self.stride == 1:
+            x1, x2 = x.chunk(2, dim=1)  # 按照维度1进行split
+            out = torch.cat((x1, self.branch2(x2)), dim=1)
+        else:
+            out = torch.cat((self.branch1(x), self.branch2(x)), dim=1)
+
+        out = channel_shuffle(out, 2)
+
+        return out
+
+
+# without BN version
+class ASPP(nn.Module):
+    def __init__(self, in_channel=512, out_channel=256):
+        super(ASPP, self).__init__()
+        self.mean = nn.AdaptiveAvgPool2d((1, 1))  # (1,1)means ouput_dim
+        self.conv = nn.Conv2d(in_channel,out_channel, 1, 1)
+        self.atrous_block1 = nn.Conv2d(in_channel, out_channel, 1, 1)
+        self.atrous_block6 = nn.Conv2d(in_channel, out_channel, 3, 1, padding=6, dilation=6)
+        self.atrous_block12 = nn.Conv2d(in_channel, out_channel, 3, 1, padding=12, dilation=12)
+        self.atrous_block18 = nn.Conv2d(in_channel, out_channel, 3, 1, padding=18, dilation=18)
+        self.conv_1x1_output = nn.Conv2d(out_channel * 5, out_channel, 1, 1)
+
+    def forward(self, x):
+        size = x.shape[2:]
+
+        image_features = self.mean(x)
+        image_features = self.conv(image_features)
+        image_features = F.upsample(image_features, size=size, mode='bilinear')
+
+        atrous_block1 = self.atrous_block1(x)
+        atrous_block6 = self.atrous_block6(x)
+        atrous_block12 = self.atrous_block12(x)
+        atrous_block18 = self.atrous_block18(x)
+
+        net = self.conv_1x1_output(torch.cat([image_features, atrous_block1, atrous_block6,
+                                              atrous_block12, atrous_block18], dim=1))
+        return net
+
+
+class BasicConv(nn.Module):
+
+    def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True, bn=True):
+        super(BasicConv, self).__init__()
+        self.out_channels = out_planes
+        if bn:
+            self.conv = nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups=groups, bias=False)
+            self.bn = nn.BatchNorm2d(out_planes, eps=1e-5, momentum=0.01, affine=True)
+            self.relu = nn.ReLU(inplace=True) if relu else None
+        else:
+            self.conv = nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups=groups, bias=True)
+            self.bn = None
+            self.relu = nn.ReLU(inplace=True) if relu else None
+
+    def forward(self, x):
+        x = self.conv(x)
+        if self.bn is not None:
+            x = self.bn(x)
+        if self.relu is not None:
+            x = self.relu(x)
+        return x
+
+
+class BasicRFB(nn.Module):
+
+    def __init__(self, in_planes, out_planes, stride=1, scale=0.1, map_reduce=8, vision=1, groups=1):
+        super(BasicRFB, self).__init__()
+        self.scale = scale
+        self.out_channels = out_planes
+        inter_planes = in_planes // map_reduce
+
+        self.branch0 = nn.Sequential(
+            BasicConv(in_planes, inter_planes, kernel_size=1, stride=1, groups=groups, relu=False),
+            BasicConv(inter_planes, 2 * inter_planes, kernel_size=(3, 3), stride=stride, padding=(1, 1), groups=groups),
+            BasicConv(2 * inter_planes, 2 * inter_planes, kernel_size=3, stride=1, padding=vision + 1, dilation=vision + 1, relu=False, groups=groups)
+        )
+        self.branch1 = nn.Sequential(
+            BasicConv(in_planes, inter_planes, kernel_size=1, stride=1, groups=groups, relu=False),
+            BasicConv(inter_planes, 2 * inter_planes, kernel_size=(3, 3), stride=stride, padding=(1, 1), groups=groups),
+            BasicConv(2 * inter_planes, 2 * inter_planes, kernel_size=3, stride=1, padding=vision + 2, dilation=vision + 2, relu=False, groups=groups)
+        )
+        self.branch2 = nn.Sequential(
+            BasicConv(in_planes, inter_planes, kernel_size=1, stride=1, groups=groups, relu=False),
+            BasicConv(inter_planes, (inter_planes // 2) * 3, kernel_size=3, stride=1, padding=1, groups=groups),
+            BasicConv((inter_planes // 2) * 3, 2 * inter_planes, kernel_size=3, stride=stride, padding=1, groups=groups),
+            BasicConv(2 * inter_planes, 2 * inter_planes, kernel_size=3, stride=1, padding=vision + 4, dilation=vision + 4, relu=False, groups=groups)
+        )
+
+        self.ConvLinear = BasicConv(6 * inter_planes, out_planes, kernel_size=1, stride=1, relu=False)
+        self.shortcut = BasicConv(in_planes, out_planes, kernel_size=1, stride=stride, relu=False)
+        self.relu = nn.ReLU(inplace=False)
+
+    def forward(self, x):
+        x0 = self.branch0(x)
+        x1 = self.branch1(x)
+        x2 = self.branch2(x)
+
+        out = torch.cat((x0, x1, x2), 1)
+        out = self.ConvLinear(out)
+        short = self.shortcut(x)
+        out = out * self.scale + short
+        out = self.relu(out)
+
+        return out
+
+
+class SPPCSPC(nn.Module):
+    # CSP https://github.com/WongKinYiu/CrossStagePartialNetworks
+    def __init__(self, c1, c2, n=1, shortcut=False, g=1, e=0.5, k=(5, 9, 13)):
+        super(SPPCSPC, self).__init__()
+        c_ = int(2 * c2 * e)  # hidden channels
+        self.cv1 = Conv(c1, c_, 1, 1)
+        self.cv2 = Conv(c1, c_, 1, 1)
+        self.cv3 = Conv(c_, c_, 3, 1)
+        self.cv4 = Conv(c_, c_, 1, 1)
+        self.m = nn.ModuleList([nn.MaxPool2d(kernel_size=x, stride=1, padding=x // 2) for x in k])
+        self.cv5 = Conv(4 * c_, c_, 1, 1)
+        self.cv6 = Conv(c_, c_, 3, 1)
+        self.cv7 = Conv(2 * c_, c2, 1, 1)
+
+    def forward(self, x):
+        x1 = self.cv4(self.cv3(self.cv1(x)))
+        y1 = self.cv6(self.cv5(torch.cat([x1] + [m(x1) for m in self.m], 1)))
+        y2 = self.cv2(x)
+        return self.cv7(torch.cat((y1, y2), dim=1))
+
+
+#分组SPPCSPC 分组后参数量和计算量与原本差距不大，不知道效果怎么样
+class SPPCSPC_group(nn.Module):
+    def __init__(self, c1, c2, n=1, shortcut=False, g=1, e=0.5, k=(5, 9, 13)):
+        super(SPPCSPC_group, self).__init__()
+        c_ = int(2 * c2 * e)  # hidden channels
+        self.cv1 = Conv(c1, c_, 1, 1, g=4)
+        self.cv2 = Conv(c1, c_, 1, 1, g=4)
+        self.cv3 = Conv(c_, c_, 3, 1, g=4)
+        self.cv4 = Conv(c_, c_, 1, 1, g=4)
+        self.m = nn.ModuleList([nn.MaxPool2d(kernel_size=x, stride=1, padding=x // 2) for x in k])
+        self.cv5 = Conv(4 * c_, c_, 1, 1, g=4)
+        self.cv6 = Conv(c_, c_, 3, 1, g=4)
+        self.cv7 = Conv(2 * c_, c2, 1, 1, g=4)
+
+    def forward(self, x):
+        x1 = self.cv4(self.cv3(self.cv1(x)))
+        y1 = self.cv6(self.cv5(torch.cat([x1] + [m(x1) for m in self.m], 1)))
+        y2 = self.cv2(x)
+        return self.cv7(torch.cat((y1, y2), dim=1))
