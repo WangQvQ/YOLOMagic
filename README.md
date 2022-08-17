@@ -36,48 +36,6 @@
 13.持续更新中
 
 ------
-
-本人所用数据集是网络上购买的黑夜行人数据集（训练集9424，验证集2357，测试集3249），数据集只包含一个Person类别
-
-这里简单展示一些数据集的内容
-
-
-
-![image](https://user-images.githubusercontent.com/58406737/180331142-1c20eb86-d798-41ea-8cdd-dcc20dc3bdf3.png)
-
-
-
-
-
-
-------
-
-这里我也免费分享这个数据集，数据集已经划分成了Yolo的格式，大家下载后直接可以使用。
-
->百度网盘
->
->链接：https://pan.baidu.com/s/1bD88KAps5jjliI-ElYLvDg?pwd=3mh0 
->提取码：3mh0
-
-
-
-
-------
-
-实验结果
-
-| Model             | epoch | freeze | multi_scale | mAP 0.5(val)  
-| ----------------- | ----- | ------ | ----------- | --------- | 
-| Yolov5s           | 300   | 0      | false       | **0.953** | 
-| Yolov5s           | 120   | 8      | false       | 0.936     |
-| Yolov5s_SE        | 120   | 7      | false       | 0.874     | 
-| Yolov5s_ECA       | 200   | 7      | false       | 0.937     | 
-| Yolov5s_CBAM      | 200   | 7      | **true**    | 0.882     | 
-| Yolov5s_BiFPN     | 200   | 7      | false       | 0.935     |
-| Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     |
-
-------
-
  参数量与计算量（以yolov5s为baseline）
 
 | Model         | 参数量(parameters) | 计算量(GFLOPs) |
@@ -100,7 +58,6 @@
 
 
 ------
-🍀2022年6月24日 添加了Inception_Conv模块，替换了第一层的6x6卷积，新的模块比6x6卷积参数量减少了一半
 
 还有一些其他tircks的实验结果我正在整理中，后续我会更新在Github的
 
