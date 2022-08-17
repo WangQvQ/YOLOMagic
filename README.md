@@ -66,15 +66,38 @@
 
 实验结果
 
-| Model             | epoch | freeze | multi_scale | mAP 0.5(val)  | Parameters(M) | GFLOPs |
-| ----------------- | ----- | ------ | ----------- | --------- | ------------- | ------ |
-| Yolov5s           | 300   | 0      | false       | **0.953** | Nan           | Nan    |
-| Yolov5s           | 120   | 8      | false       | 0.936     | Nan           | Nan    |
-| Yolov5s_SE        | 120   | 7      | false       | 0.874     | Nan           | Nan    |
-| Yolov5s_ECA       | 200   | 7      | false       | 0.937     | Nan           | Nan    |
-| Yolov5s_CBAM      | 200   | 7      | **true**    | 0.882     | Nan           | Nan    |
-| Yolov5s_BiFPN     | 200   | 7      | false       | 0.935     | Nan           | Nan    |
-| Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     | Nan           | Nan    |
+| Model             | epoch | freeze | multi_scale | mAP 0.5(val)  
+| ----------------- | ----- | ------ | ----------- | --------- | 
+| Yolov5s           | 300   | 0      | false       | **0.953** | 
+| Yolov5s           | 120   | 8      | false       | 0.936     |
+| Yolov5s_SE        | 120   | 7      | false       | 0.874     | 
+| Yolov5s_ECA       | 200   | 7      | false       | 0.937     | 
+| Yolov5s_CBAM      | 200   | 7      | **true**    | 0.882     | 
+| Yolov5s_BiFPN     | 200   | 7      | false       | 0.935     |
+| Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     |
+
+------
+
+ 参数量与计算量（以yolov5s为baseline）
+
+| Model         | 参数量(parameters) | 计算量(GFLOPs) |
+| ------------- | ------------------ | -------------- |
+| C3CBAM        | 6631243            | 14.7           |
+| CA            | 7271069            |                |
+| More_ECA      | 7235401            | 16.5           |
+| SE            | 7268157            | 16.6           |
+| TransposeConv | 7241917            | 16.6           |
+| InceptionConv | 7233597            | 16.2           |
+| BiFPN         | 7384006            | 17.2           |
+| ShuffleNetv2  | 3844193            | 8.1            |
+| CARAFE        | 7369445            | 17.0           |
+| SPP           | 7225885            | 16.5           |
+| SPPF          | 7235389            | 16.5           |
+| ASPP          | 15485725           | 23.1           |
+| BasicRFB      | 7895421            | 17.1           |
+| SPPCSPC       | 13663549           | 21.7           |
+| SPPCSPC_group | 8355133            | 17.4           |
+
 
 ------
 🍀2022年6月24日 添加了Inception_Conv模块，替换了第一层的6x6卷积，新的模块比6x6卷积参数量减少了一半
