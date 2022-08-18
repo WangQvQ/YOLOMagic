@@ -278,7 +278,8 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
 
             args = [c1, c2, *args[1:]]
             if m in [BottleneckCSP, C3, C3TR, C3Ghost, C3x,
-                     C3CA, C3ECA, C3CBAM, C3SE]:
+                     C3CA, C3ECA, C3CBAM, C3SE,
+                     C3_CoordAtt_Attention, C3_SE_Attention, C3_ECA_Attention, C3_CBAM_Attention]:
                 args.insert(2, n)  # number of repeats
                 n = 1
             elif m is nn.ConvTranspose2d:
@@ -317,7 +318,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cfg', type=str, default='D:\GitHub\Yolov5_Magic\models\Attention\yolov5_C3_XXX_Attention.yaml',
+    parser.add_argument('--cfg', type=str, default='yolov5s.yaml',
                         help='model.yaml')
     parser.add_argument('--batch-size', type=int, default=1, help='total batch size for all GPUs')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
