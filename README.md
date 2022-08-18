@@ -1,5 +1,6 @@
 # 分享一些关于改进Yolov5的tricks以及实验结果
 # Share some tricks of improving Yolov5  and experiment results
+![赛博朋克](https://user-images.githubusercontent.com/58406737/185147502-cf221312-db48-4635-ab95-fb45e443bed3.png)
 
 ## 《Yolov5实验数据全部开源》
 
