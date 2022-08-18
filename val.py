@@ -327,27 +327,6 @@ def run(
 
 
 def parse_opt():
-    """
-    data: 数据集配置文件路径
-    weights: 测试模型的权重文件路径
-    batch_size: 前向传播的批次大小 默认32
-    imgsz: 输入网络的图片分辨率 默认640
-    conf-thres: 筛选框时候object置信度阈值 默认0.001
-    iou-thres: 进行NMS时IoU的阈值 默认0.6
-    task: 设置测试的类型 包含train, val, test, speed or study几种; 我个人测试speed和study似乎没法用
-    device: 指定测试的设备
-    single-cls: 数据集是否只用一个类别 默认False
-    augment: 测试是否使用TTA(Test Time Augment)默认False
-    verbose: 是否打印出每个类别的mAP 默认False
-    save-txt: 是否以txt的格式保存模型的结果
-    save-hybrid: 保存混合自动标签, 在 NMS 之前将现有标签与新预测相结合（在 NMS 之前给定置信度=1.0 的现有预测, 开启这个参数后各项指标奇高
-    save-conf: 在save-txt保存的结果里多加一个置信度信息
-    save-json: 是否按照coco的json格式保存预测框，并且使用cocoapi做评估（需要同样coco的json格式的标签） 默认False
-    project: 测试保存的源文件 默认runs/test
-    name: 测试保存的文件地址 默认exp  保存在runs/test/exp下
-    exist-ok: 是否存在当前文件 默认False 一般是 no exist-ok 连用  所以一般都要重新创建文件夹
-    half: 是否使用半精度推理 默认False
-    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='dataset.yaml path')
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5s.pt', help='model.pt path(s)')

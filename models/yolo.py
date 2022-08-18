@@ -271,7 +271,8 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                  C3CA, C3ECA, C3CBAM, C3SE,
                  Inception_Conv, nn.ConvTranspose2d, CARAFE, CBRM, Shuffle_Block,
                  ASPP, BasicRFB, SPPCSPC, SPPCSPC_group,
-                 C3_CoordAtt_Attention, C3_SE_Attention, C3_ECA_Attention, C3_CBAM_Attention):
+                 C3_CoordAtt_Attention, C3_SE_Attention, C3_ECA_Attention, C3_CBAM_Attention,
+                 ):
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
                 c2 = make_divisible(c2 * gw, 8)
@@ -298,6 +299,8 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                 args[1] = [list(range(args[1] * 2))] * len(f)
         elif m is Contract:
             c2 = ch[f] * args[0] ** 2
+        elif m is space_to_depth:
+            c2 = 4 * ch[f]
         elif m is Expand:
             c2 = ch[f] // args[0] ** 2
         else:
@@ -318,7 +321,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cfg', type=str, default='yolov5s.yaml',
+    parser.add_argument('--cfg', type=str, default='D:\GitHub\Yolov5_Magic\models\Basics\yolov5s.yaml',
                         help='model.yaml')
     parser.add_argument('--batch-size', type=int, default=1, help='total batch size for all GPUs')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
