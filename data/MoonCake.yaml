@@ -1,0 +1,10 @@
+
+
+train: D:\Pycharm_Projects\datasets\MoonCake_datasets\images\train # train images (relative to 'path') 128 images
+val: D:\Pycharm_Projects\datasets\MoonCake_datasets\images\val # val images (relative to 'path') 128 images
+test:  # test images (optional)
+
+# Classes
+nc: 1  # number of classes
+names: ['Moon Cake']  # class names
+
