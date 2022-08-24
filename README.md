@@ -61,7 +61,10 @@
 
 
 ------
+2022.8.24 新加了Pyqt页面的demo，目前只能实现检测
 
 2022.8.22 yolo.py文件新增了中文注释
 
+---
+![image](https://user-images.githubusercontent.com/58406737/186384916-db71770b-22a9-4bba-8739-89cb3d6f81dc.png)
 
