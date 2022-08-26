@@ -39,25 +39,59 @@
 14.持续更新中
 
 ------
- 参数量与计算量（以yolov5s为baseline）
-
+ **参数量与计算量（以yolov5s为baseline）**
+ 
+**注意力**：
 | Model         | 参数量(parameters) | 计算量(GFLOPs) |
 | ------------- | ------------------ | -------------- |
-| C3CBAM        | 6631243            | 14.7           |
-| CA            | 7271069            |   /             |
-| More_ECA      | 7235401            | 16.5           |
-| SE            | 7268157            | 16.6           |
-| TransposeConv | 7241917            | 16.6           |
-| InceptionConv | 7233597            | 16.2           |
-| BiFPN         | 7384006            | 17.2           |
-| ShuffleNetv2  | 3844193            | 8.1            |
-| CARAFE        | 7369445            | 17.0           |
+| 主干加单层**SE**| 7268157            | 16.6           |
+| 主干加单层**CBAM**  | 7268255            | 16.6           |
+| 主干加单层**ECA**| 7235392        |   16.5            |
+| 主干加单层**CA**|  7261037        |  \          |
+| 主干所有**C3**的**BottleNeck**中加（第一版本）|  \        |  \          |
+| 主干所有**C3**中加单层（第二版本）|  \       |  \          |
+| 。。。| 。。。        |  。。。          |
+
+
+
+**SPP结构**：
+| Model         | 参数量(parameters) | 计算量(GFLOPs) |
+| ------------- | ------------------ | -------------- |
 | SPP           | 7225885            | 16.5           |
 | SPPF          | 7235389            | 16.5           |
 | ASPP          | 15485725           | 23.1           |
 | BasicRFB      | 7895421            | 17.1           |
 | SPPCSPC       | 13663549           | 21.7           |
 | SPPCSPC_group | 8355133            | 17.4           |
+
+
+
+**Others**：
+
+
+| Model         | 参数量(parameters) | 计算量(GFLOPs) |
+| ------------- | ------------------ | -------------- |
+| TransposeConv upsampling| 7241917            | 16.6           |
+| InceptionConv | 7233597            | 16.2           |
+| BiFPN         | 7384006            | 17.2           |
+| ShuffleNetv2  | 3844193            | 8.1            |
+| CARAFE        | 7369445            | 17.0           |
+
+------
+
+实验结果（仅供参考）
+
+| Model             | epoch | freeze | multi_scale | mAP 0.5   | Parameters(M) | GFLOPs |
+| ----------------- | ----- | ------ | ----------- | --------- | ------------- | ------ |
+| Yolov5s           | 300   | 0      | false       | **0.953** | Nan           | Nan    |
+| Yolov5s           | 120   | 8      | false       | 0.936     | Nan           | Nan    |
+| Yolov5s_SE        | 120   | 7      | false       | 0.874     | Nan           | Nan    |
+| Yolov5s_ECA       | 200   | 7      | false       | 0.937     | Nan           | Nan    |
+| Yolov5s_CBAM      | 200   | 7      | **true**    | 0.882     | Nan           | Nan    |
+| Yolov5s_BiFPN     | 200   | 7      | false       | 0.935     | Nan           | Nan    |
+| Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     | Nan           | Nan    |
+
+------
 
 
 ------
