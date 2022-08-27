@@ -24,19 +24,19 @@
 
 有关代码怎么使用我就不过多介绍了，大家可以去看我的博文，或者官方的文档，我在这统一做一个汇总
 
-1.[手把手带你调参Yolo v5 (v6.1)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
+1.[手把手带你调参Yolo v5 (v6.2)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
 
-2.[手把手带你调参Yolo v5 (v6.1)（二）](https://blog.csdn.net/weixin_43694096/article/details/124411509?spm=1001.2014.3001.5502)🚀
+2.[手把手带你调参Yolo v5 (v6.2)（二）](https://blog.csdn.net/weixin_43694096/article/details/124411509?spm=1001.2014.3001.5502)🚀
 
 3.[如何快速使用自己的数据集训练Yolov5模型](https://blog.csdn.net/weixin_43694096/article/details/124457787)
 
-4.[手把手带你Yolov5 (v6.1)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟
+4.[手把手带你Yolov5 (v6.2)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟
 
-5.[手把手带你Yolov5 (v6.1)添加注意力机制(二)（在C3模块中加入注意力机制）](https://blog.csdn.net/weixin_43694096/article/details/124695537)
+5.[手把手带你Yolov5 (v6.2)添加注意力机制(二)（在C3模块中加入注意力机制）](https://blog.csdn.net/weixin_43694096/article/details/124695537)
 
 6.[Yolov5如何更换激活函数？](https://blog.csdn.net/weixin_43694096/article/details/124413941?spm=1001.2014.3001.5502)
 
-7.[Yolov5 (v6.1)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
+7.[Yolov5 (v6.2)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
 
 8.[Yolov5更换上采样方式( 最近邻 / 双线性 / 双立方 / 三线性 / 转置卷积)](https://blog.csdn.net/weixin_43694096/article/details/125416120)
 
@@ -48,7 +48,7 @@
 
 12.[空间金字塔池化改进 SPP / SPPF / ASPP / RFB / SPPCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)🍀
 
-13.[用于低分辨率图像和小物体的新 CNN 模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
+13.[用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
 
 14.持续更新中
 
