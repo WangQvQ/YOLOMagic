@@ -1,4 +1,5 @@
 # 一款面向改进Yolov5的开源仓库，提供丰富的魔改方法
+# An Open Source Repository for Improving Yolov5, Providing Rich Magic Methods
 
 
 ![赛博朋克](https://user-images.githubusercontent.com/58406737/187069415-adeba391-f7e3-4f66-b0bc-6d156cf2e816.png)
@@ -22,7 +23,7 @@
 -----
 
 ## 改进方式教程
-
+## Tutorial on How to Improve
 
 1.[手把手带你调参Yolo v5 (v6.2)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
 
@@ -72,7 +73,7 @@
 | YOLOv5x6<br>+ TTA | 1280<br>1536          | 55.0<br>**55.8**        | 72.7<br>**72.7**   | 3136<br>-                    | 26.2<br>-                     | 19.4<br>-                      | 140.7<br>-         | 209.8<br>-             |[YOLOv5x6](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5x6.pt)
 
               
- <details><summary> <b>SPP结构参数量与计算量</b> </summary>
+ <details><summary> <b>SPP Structure Parameter and GFLOPs</b> </summary>
  
 | Model         | 参数量(parameters) | 计算量(GFLOPs) |
 | ------------- | ------------------ | -------------- |
@@ -85,7 +86,7 @@
 
 </details>
 
-<details><summary> <b>Others参数量与计算量</b> </summary>
+<details><summary> <b>Others Structure Parameter and GFLOPs</b> </summary>
 
 | Model         | 参数量(parameters) | 计算量(GFLOPs) |
 | ------------- | ------------------ | -------------- |
@@ -99,12 +100,9 @@
 
 
 
-<details><summary> <b>更新日志</b> </summary>
-
-
-2022.8.22 yolo.py文件新增了中文注释🍀
-
-2022.8.24 新加了Pyqt页面的demo，目前只能实现检测🍀
+<details><summary> <b>Update log</b> </summary>
+2022.8.22 yolo.py Add Chinese annotations🍀
+2022.8.24 Add Demo of Pyqt page🍀
 </details>
 
 <details><summary> <b>Acknowledgements</b> </summary>
