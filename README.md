@@ -1,5 +1,5 @@
-# 分享一些关于改进Yolov5的tricks以及实验结果
-# Share some tricks of improving Yolov5  and experiment results
+# 一款面向改进Yolov5的开源仓库，提供丰富的魔改Yolov5方法
+
 
 ![赛博朋克](https://user-images.githubusercontent.com/58406737/187069415-adeba391-f7e3-4f66-b0bc-6d156cf2e816.png)
 
@@ -18,13 +18,10 @@
                                     alt="AI教程"> </center></div>
 
 
-## 《Yolov5实验数据全部开源》
-
-分享一些改进YOLOv5的技巧，不同的数据集效果肯定是不同的。有算力的话还是要多尝试
 
 -----
 
-有关代码怎么使用我就不过多介绍了，大家可以去看我的博文，或者官方的文档，我在这统一做一个汇总
+## 改进方式教程：
 
 
 1.[手把手带你调参Yolo v5 (v6.2)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
@@ -56,24 +53,27 @@
 14.持续更新中
 
 ------
-<div align="center">               
-参数量与计算量（以yolov5s为baseline）
+
+
+
+### Performance
+| Model                                                                                                | size<br><sup>(pixels) | mAP<sup>val<br>0.5:0.95 | mAP<sup>val<br>0.5 | Speed<br><sup>CPU b1<br>(ms) | Speed<br><sup>V100 b1<br>(ms) | Speed<br><sup>V100 b32<br>(ms) | params<br><sup>(M) | FLOPs<br><sup>@640 (B) | Weights
+|------------------------------------------------------------------------------------------------------|-----------------------|-------------------------|--------------------|------------------------------|-------------------------------|--------------------------------|--------------------|------------------------|------------------------|
+| YOLOv5n                   | 640                   | 28.0                    | 45.7               | **45**                       | **6.3**                       | **0.6**                        | **1.9**            | **4.5**                | [YOLOv5n](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5n.pt)
+| YOLOv5s                   | 640                   | 37.4                    | 56.8               | 98                           | 6.4                           | 0.9                            | 7.2                | 16.5                   | [YOLOv5s](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5s.pt)
+| YOLOv5m                   | 640                   | 45.4                    | 64.1               | 224                          | 8.2                           | 1.7                            | 21.2               | 49.0                   | [YOLOv5m](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5m.pt)
+| YOLOv5l                   | 640                   | 49.0                    | 67.3               | 430                          | 10.1                          | 2.7                            | 46.5               | 109.1                  | [YOLOv5l](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5l.pt)
+| YOLOv5x                   | 640                   | 50.7                    | 68.9               | 766                          | 12.1                          | 4.8                            | 86.7               | 205.7                  | [YOLOv5x](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5x.pt)
+|                                                                                                      |                       |                         |                    |                              |                               |                                |                    |                        |
+| YOLOv5n6                 | 1280                  | 36.0                    | 54.4               | 153                          | 8.1                           | 2.1                            | 3.2                | 4.6                    |[YOLOv5n6](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5n6.pt)
+| YOLOv5s6                 | 1280                  | 44.8                    | 63.7               | 385                          | 8.2                           | 3.6                            | 12.6               | 16.8                   |[YOLOv5s6](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5s6.pt)
+| YOLOv5m6                 | 1280                  | 51.3                    | 69.3               | 887                          | 11.1                          | 6.8                            | 35.7               | 50.0                   |[YOLOv5m6](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5m6.pt)
+| YOLOv5l6                 | 1280                  | 53.7                    | 71.3               | 1784                         | 15.8                          | 10.5                           | 76.8               | 111.4                  |[YOLOv5l6](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5l6.pt)
+| YOLOv5x6<br>+ TTA | 1280<br>1536          | 55.0<br>**55.8**        | 72.7<br>**72.7**   | 3136<br>-                    | 26.2<br>-                     | 19.4<br>-                      | 140.7<br>-         | 209.8<br>-             |[YOLOv5x6](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5x6.pt)
+
+              
+ <details><summary> <b>SPP结构参数量与计算量</b> </summary>
  
-
- **注意力**：
-| Model         | 参数量(parameters) | 计算量(GFLOPs) |
-| ------------- | ------------------ | -------------- |
-| 主干加单层**SE**| 7268157            | 16.6           |
-| 主干加单层**CBAM**  | 7268255            | 16.6           |
-| 主干加单层**ECA**| 7235392        |   16.5            |
-| 主干加单层**CA**|  7261037        |  \          |
-| 主干所有**C3**的**BottleNeck**中加（第一版本）|  \        |  \          |
-| 主干所有**C3**中加单层（第二版本）|  \       |  \          |
-| 。。。| 。。。        |  。。。          | 
- 
-
-
-**SPP结构**：
 | Model         | 参数量(parameters) | 计算量(GFLOPs) |
 | ------------- | ------------------ | -------------- |
 | SPP           | 7225885            | 16.5           |
@@ -83,10 +83,9 @@
 | SPPCSPC       | 13663549           | 21.7           |
 | SPPCSPC_group | 8355133            | 17.4           |
 
+</details>
 
-
-**Others**：
-
+<details><summary> <b>Others参数量与计算量</b> </summary>
 
 | Model         | 参数量(parameters) | 计算量(GFLOPs) |
 | ------------- | ------------------ | -------------- |
@@ -95,22 +94,8 @@
 | BiFPN         | 7384006            | 17.2           |
 | ShuffleNetv2  | 3844193            | 8.1            |
 | CARAFE        | 7369445            | 17.0           |
+</details>
 
-------
-
-实验结果（仅供参考）
-
-| Model             | epoch | freeze | multi_scale | mAP 0.5   | Parameters(M) | GFLOPs |
-| ----------------- | ----- | ------ | ----------- | --------- | ------------- | ------ |
-| Yolov5s           | 300   | 0      | false       | **0.953** | Nan           | Nan    |
-| Yolov5s           | 120   | 8      | false       | 0.936     | Nan           | Nan    |
-| Yolov5s_SE        | 120   | 7      | false       | 0.874     | Nan           | Nan    |
-| Yolov5s_ECA       | 200   | 7      | false       | 0.937     | Nan           | Nan    |
-| Yolov5s_CBAM      | 200   | 7      | **true**    | 0.882     | Nan           | Nan    |
-| Yolov5s_BiFPN     | 200   | 7      | false       | 0.935     | Nan           | Nan    |
-| Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     | Nan           | Nan    |
-
-</div>
 
 
 ------
