@@ -21,7 +21,7 @@
 
 -----
 
-## 改进方式教程：
+## 改进方式教程
 
 
 1.[手把手带你调参Yolo v5 (v6.2)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
@@ -56,7 +56,7 @@
 
 
 
-### Performance
+## Performance
 | Model                                                                                                | size<br><sup>(pixels) | mAP<sup>val<br>0.5:0.95 | mAP<sup>val<br>0.5 | Speed<br><sup>CPU b1<br>(ms) | Speed<br><sup>V100 b1<br>(ms) | Speed<br><sup>V100 b32<br>(ms) | params<br><sup>(M) | FLOPs<br><sup>@640 (B) | Weights
 |------------------------------------------------------------------------------------------------------|-----------------------|-------------------------|--------------------|------------------------------|-------------------------------|--------------------------------|--------------------|------------------------|------------------------|
 | YOLOv5n                   | 640                   | 28.0                    | 45.7               | **45**                       | **6.3**                       | **0.6**                        | **1.9**            | **4.5**                | [YOLOv5n](https://github.com/ultralytics/yolov5/releases/download/v6.1/yolov5n.pt)
@@ -98,13 +98,15 @@
 
 
 
-------
-更新日志：
+
+<details><summary> <b>更新日志</b> </summary>
+
 
 2022.8.22 yolo.py文件新增了中文注释🍀
 
 2022.8.24 新加了Pyqt页面的demo，目前只能实现检测🍀
+</details>
 
----
-
-
+<details><summary> <b>Acknowledgements</b> </summary>
+https://github.com/ultralytics/yolov5
+</details>
