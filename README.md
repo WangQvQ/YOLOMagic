@@ -1,4 +1,4 @@
-# 一款面向改进Yolov5的开源仓库，提供丰富的魔改Yolov5方法
+# 一款面向改进Yolov5的开源仓库，提供丰富的魔改方法
 
 
 ![赛博朋克](https://user-images.githubusercontent.com/58406737/187069415-adeba391-f7e3-4f66-b0bc-6d156cf2e816.png)
