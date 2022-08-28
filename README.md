@@ -1,8 +1,9 @@
 # 分享一些关于改进Yolov5的tricks以及实验结果
 # Share some tricks of improving Yolov5  and experiment results
-![赛博朋克](https://user-images.githubusercontent.com/58406737/185147502-cf221312-db48-4635-ab95-fb45e443bed3.png)
 
- <center>  <div xss=removed> <img src="https://img.shields.io/badge/QQ%E4%BA%A4%E6%B5%81%E7%BE%A4-750560739-blue"
+![赛博朋克](https://user-images.githubusercontent.com/58406737/187069415-adeba391-f7e3-4f66-b0bc-6d156cf2e816.png)
+
+<div align="center">       <img src="https://img.shields.io/badge/QQ%E4%BA%A4%E6%B5%81%E7%BE%A4-750560739-blue"
                         alt="QQ交流群">
                     <b><a href="https://github.com/WangQvQ/Yolov5_Magic">
                             <img src="https://img.shields.io/badge/%E8%BF%AA%E8%8F%B2%E8%B5%AB%E5%B0%94%E6%9B%BC-YOLO%20Magic-critical"
@@ -14,7 +15,8 @@
                         <a href="https://www.captainai.net/diffie/">
                              <img
                                     src="https://img.shields.io/badge/%E7%A6%8F%E5%88%A9-%E5%85%8D%E8%B4%B9AI%E6%95%99%E7%A8%8B-success"
-                                    alt="AI教程"> </center>
+                                    alt="AI教程"> </center></div>
+
 
 ## 《Yolov5实验数据全部开源》
 
@@ -23,6 +25,7 @@
 -----
 
 有关代码怎么使用我就不过多介绍了，大家可以去看我的博文，或者官方的文档，我在这统一做一个汇总
+
 
 1.[手把手带你调参Yolo v5 (v6.2)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
 
@@ -107,12 +110,15 @@
 | Yolov5s_BiFPN     | 200   | 7      | false       | 0.935     | Nan           | Nan    |
 | Yolov5s_BiFPN_ECA | 200   | 0      | false       | 0.951     | Nan           | Nan    |
 
+</div>
+
+
 ------
-
-
-2022.8.24 新加了Pyqt页面的demo，目前只能实现检测🍀
+更新日志：
 
 2022.8.22 yolo.py文件新增了中文注释🍀
+
+2022.8.24 新加了Pyqt页面的demo，目前只能实现检测🍀
 
 ---
 
