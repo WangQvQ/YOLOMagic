@@ -47,7 +47,7 @@
 
 11.[YOLOv5应用轻量级通用上采样算子CARAFE](https://blog.csdn.net/weixin_43694096/article/details/126148795)🍀
 
-12.[空间金字塔池化改进 SPP / SPPF / ASPP / RFB / SPPCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)🍀
+12.[空间金字塔池化改进 SPP / SPPF / ASPP / SimSPPF / RFB / SPPCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)🍀
 
 13.[用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
 
@@ -79,6 +79,7 @@
 | ------------- | ------------------ | -------------- |
 | SPP           | 7225885            | 16.5           |
 | SPPF          | 7235389            | 16.5           |
+| SimSPPF       | 7235389            | 16.5           |
 | ASPP          | 15485725           | 23.1           |
 | BasicRFB      | 7895421            | 17.1           |
 | SPPCSPC       | 13663549           | 21.7           |
