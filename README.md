@@ -107,6 +107,7 @@
 
 <details><summary> <b>Update log</b> </summary>
 2022.8.22 yolo.py Add Chinese annotations🍀
+
 2022.8.24 Add Demo of Pyqt page🍀
 </details>
 
