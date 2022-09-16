@@ -25,37 +25,39 @@
 ## 改进方式教程
 ## Tutorial on How to Improve
 
-1.[手把手带你调参Yolo v5 (v6.2)（一）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
+1. [手把手带你调参Yolo v5 (v6.2)（推理）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
 
-2.[手把手带你调参Yolo v5 (v6.2)（二）](https://blog.csdn.net/weixin_43694096/article/details/124411509?spm=1001.2014.3001.5502)🚀
-
-
-3.[手把手带你调参Yolo v5 (v6.2)（三）](https://yolov5.blog.csdn.net/article/details/126630836)🍀
+2. [手把手带你调参Yolo v5 (v6.2)（训练）](https://blog.csdn.net/weixin_43694096/article/details/124411509?spm=1001.2014.3001.5502)🚀
 
 
-4.[如何快速使用自己的数据集训练Yolov5模型](https://blog.csdn.net/weixin_43694096/article/details/124457787)
+3. [手把手带你调参Yolo v5 (v6.2)（验证）](https://yolov5.blog.csdn.net/article/details/126630836)🍀
 
-5.[手把手带你Yolov5 (v6.2)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟
 
-6.[手把手带你Yolov5 (v6.2)添加注意力机制(二)（在C3模块中加入注意力机制）](https://blog.csdn.net/weixin_43694096/article/details/124695537)
+4. [如何快速使用自己的数据集训练Yolov5模型](https://blog.csdn.net/weixin_43694096/article/details/124457787)
 
-7.[Yolov5如何更换激活函数？](https://blog.csdn.net/weixin_43694096/article/details/124413941?spm=1001.2014.3001.5502)
+5. [手把手带你Yolov5 (v6.2)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟
 
-8.[Yolov5 (v6.2)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
+6. [手把手带你Yolov5 (v6.2)添加注意力机制(二)（在C3模块中加入注意力机制）](https://blog.csdn.net/weixin_43694096/article/details/124695537)
 
-9.[Yolov5更换上采样方式( 最近邻 / 双线性 / 双立方 / 三线性 / 转置卷积)](https://blog.csdn.net/weixin_43694096/article/details/125416120)
+7. [Yolov5如何更换激活函数？](https://blog.csdn.net/weixin_43694096/article/details/124413941?spm=1001.2014.3001.5502)
 
-10.[Yolov5如何更换EIOU / alpha IOU / SIoU？](https://blog.csdn.net/weixin_43694096/article/details/124902685)
+8. [Yolov5如何更换BiFPN? ](https://yolov5.blog.csdn.net/article/details/125148552)
 
-11.[Yolov5更换主干网络之《旷视轻量化卷积神经网络ShuffleNetv2》](https://blog.csdn.net/weixin_43694096/article/details/126109839?spm=1001.2014.3001.5501)🍀
+9. [Yolov5 (v6.2)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
 
-12.[YOLOv5应用轻量级通用上采样算子CARAFE](https://blog.csdn.net/weixin_43694096/article/details/126148795)🍀
+10. [Yolov5更换上采样方式( 最近邻 / 双线性 / 双立方 / 三线性 / 转置卷积)](https://blog.csdn.net/weixin_43694096/article/details/125416120)
 
-13.[空间金字塔池化改进 SPP / SPPF / ASPP / SimSPPF / RFB / SPPCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)🍀
+11. [Yolov5如何更换EIOU / alpha IOU / SIoU？](https://blog.csdn.net/weixin_43694096/article/details/124902685)
 
-14.[用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
+12. [Yolov5更换主干网络之《旷视轻量化卷积神经网络ShuffleNetv2》](https://blog.csdn.net/weixin_43694096/article/details/126109839?spm=1001.2014.3001.5501)🍀
 
-15.持续更新中
+13. [YOLOv5应用轻量级通用上采样算子CARAFE](https://blog.csdn.net/weixin_43694096/article/details/126148795)🍀
+
+14. [空间金字塔池化改进 SPP / SPPF / SimSPPF / ASPP / RFB / SPPCSPC / SPPFCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)
+
+15. [用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
+
+16. 持续更新中
 
 ------
 
