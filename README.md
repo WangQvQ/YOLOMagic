@@ -57,7 +57,7 @@
 
 15. [用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
 
-16. 持续更新中
+16. [GSConv+Slim-neck 减轻模型的复杂度同时提升精度](https://blog.csdn.net/weixin_43694096/article/details/127344636?spm=1001.2014.3001.5501)
 
 ------
 
