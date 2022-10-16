@@ -30,12 +30,12 @@
 2. [手把手带你调参Yolo v5 (v6.2)（训练）](https://blog.csdn.net/weixin_43694096/article/details/124411509?spm=1001.2014.3001.5502)🚀
 
 
-3. [手把手带你调参Yolo v5 (v6.2)（验证）](https://yolov5.blog.csdn.net/article/details/126630836)🍀
+3. [手把手带你调参Yolo v5 (v6.2)（验证）](https://yolov5.blog.csdn.net/article/details/126630836)
 
 
 4. [如何快速使用自己的数据集训练Yolov5模型](https://blog.csdn.net/weixin_43694096/article/details/124457787)
 
-5. [手把手带你Yolov5 (v6.2)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟
+5. [手把手带你Yolov5 (v6.2)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟强烈推荐
 
 6. [手把手带你Yolov5 (v6.2)添加注意力机制(二)（在C3模块中加入注意力机制）](https://blog.csdn.net/weixin_43694096/article/details/124695537)
 
@@ -51,13 +51,13 @@
 
 12. [Yolov5更换主干网络之《旷视轻量化卷积神经网络ShuffleNetv2》](https://blog.csdn.net/weixin_43694096/article/details/126109839?spm=1001.2014.3001.5501)🍀
 
-13. [YOLOv5应用轻量级通用上采样算子CARAFE](https://blog.csdn.net/weixin_43694096/article/details/126148795)🍀
+13. [YOLOv5应用轻量级通用上采样算子CARAFE](https://blog.csdn.net/weixin_43694096/article/details/126148795)
 
-14. [空间金字塔池化改进 SPP / SPPF / SimSPPF / ASPP / RFB / SPPCSPC / SPPFCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)
+14. [空间金字塔池化改进 SPP / SPPF / SimSPPF / ASPP / RFB / SPPCSPC / SPPFCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)🚀
 
 15. [用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)🍀
 
-16. [GSConv+Slim-neck 减轻模型的复杂度同时提升精度](https://blog.csdn.net/weixin_43694096/article/details/127344636?spm=1001.2014.3001.5501)
+16. [GSConv+Slim-neck 减轻模型的复杂度同时提升精度](https://blog.csdn.net/weixin_43694096/article/details/127344636?spm=1001.2014.3001.5501)🍀
 
 ------
 
