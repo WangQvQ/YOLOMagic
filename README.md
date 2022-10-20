@@ -59,6 +59,7 @@
 
 16. [GSConv+Slim-neck 减轻模型的复杂度同时提升精度](https://blog.csdn.net/weixin_43694096/article/details/127344636?spm=1001.2014.3001.5501)🍀
 
+17. [头部解耦 | 将YOLOX解耦头添加到YOLOv5 | 涨点杀器](https://yolov5.blog.csdn.net/article/details/127427578)🍀
 ------
 
 
