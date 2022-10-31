@@ -416,9 +416,45 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
             c2 = 4 * ch[f]
         elif m is Expand:  # 不怎么用
             c2 = ch[f] // args[0] ** 2
+        elif m is SOCA:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+            args = [c1, *args[1:]]
+        elif m is SimAM:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+            args = [c1, c2]
+        elif m is NAMAttention:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+            args = [c1, *args[1:]]
+        elif m is CrissCrossAttention:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+            args = [c1, *args[1:]]
+        elif m is GAMAttention:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+        elif m is SKAttention:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+            args = [c1, *args[1:]]
+        elif m is ShuffleAttention:
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+
+
         else:
             # Upsample
             c2 = ch[f]  # args不变
+
         # -----------------------------------------------------------------------------------
 
         # m_: 得到当前层module  如果n>1就创建多个m(当前层结构), 如果n=1就创建一个m
