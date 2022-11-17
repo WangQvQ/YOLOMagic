@@ -2,7 +2,8 @@
 # An Open Source Repository for Improving Yolov5, Providing Rich Magic Methods
 
 
-![赛博朋克](https://user-images.githubusercontent.com/58406737/187069415-adeba391-f7e3-4f66-b0bc-6d156cf2e816.png)
+![image](https://user-images.githubusercontent.com/58406737/202331524-d57da9d4-bc93-492a-be05-4f5f4dcc9aab.png)
+
 
 <div align="center">       <img src="https://img.shields.io/badge/QQ%E4%BA%A4%E6%B5%81%E7%BE%A4-750560739-blue"
                         alt="QQ交流群">
