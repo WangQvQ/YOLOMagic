@@ -10,13 +10,7 @@
                             <img src="https://img.shields.io/badge/%E8%BF%AA%E8%8F%B2%E8%B5%AB%E5%B0%94%E6%9B%BC-YOLO%20Magic-critical"
                                 alt="迪菲赫尔曼">
                         </a>
-                        <a href="https://github.com/iscyy/yoloair">
-                            <img src="https://img.shields.io/badge/%E8%8A%92%E6%9E%9C%E6%B1%81%E6%B2%A1%E6%9C%89%E8%8A%92%E6%9E%9C-YOLO%20Air-red"
-                                alt="芒果汁没有芒果"></a>
-                        <a href="https://www.captainai.net/diffie/">
-                             <img
-                                    src="https://img.shields.io/badge/%E7%A6%8F%E5%88%A9-%E5%85%8D%E8%B4%B9AI%E6%95%99%E7%A8%8B-success"
-                                    alt="AI教程"> </center></div>
+</center></div>
 
 
 
