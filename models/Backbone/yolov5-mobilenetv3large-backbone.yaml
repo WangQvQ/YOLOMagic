@@ -1,0 +1,55 @@
+# parameters
+nc: 80  # number of classes
+depth_multiple: 1.0
+width_multiple: 1.0
+
+# anchors
+anchors:
+  - [10,13, 16,30, 33,23]  # P3/8
+  - [30,61, 62,45, 59,119]  # P4/16
+  - [116,90, 156,198, 373,326]  # P5/32
+
+   # MobileNetV3-large backbone
+  # MobileNetV3_InvertedResidual [out_ch, hid_ch, k_s, stride, SE, HardSwish]
+backbone:
+  # [from, number, module, args]
+  [[-1, 1, Conv_BN_HSwish, [16, 2]],                               # 0-p1/2
+   [-1, 1, MobileNetV3_InvertedResidual, [ 16,  16, 3, 1, 0, 0]],  # 1-p1/2
+   [-1, 1, MobileNetV3_InvertedResidual, [ 24,  64, 3, 2, 0, 0]],  # 2-p2/4
+   [-1, 1, MobileNetV3_InvertedResidual, [ 24,  72, 3, 1, 0, 0]],  # 3-p2/4
+   [-1, 1, MobileNetV3_InvertedResidual, [ 40,  72, 5, 2, 1, 0]],  # 4-p3/8
+   [-1, 1, MobileNetV3_InvertedResidual, [ 40, 120, 5, 1, 1, 0]],  # 5-p3/8
+   [-1, 1, MobileNetV3_InvertedResidual, [ 40, 120, 5, 1, 1, 0]],  # 6-p3/8
+   [-1, 1, MobileNetV3_InvertedResidual, [ 80, 240, 3, 2, 0, 1]],  # 7-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [ 80, 200, 3, 1, 0, 1]],  # 8-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [ 80, 184, 3, 1, 0, 1]],  # 9-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [ 80, 184, 3, 1, 0, 1]],  # 10-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [112, 480, 3, 1, 1, 1]],  # 11-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [112, 672, 3, 1, 1, 1]],  # 12-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [160, 672, 5, 1, 1, 1]],  # 13-p4/16
+   [-1, 1, MobileNetV3_InvertedResidual, [160, 672, 5, 2, 1, 1]],  # 14-p5/32
+   [-1, 1, MobileNetV3_InvertedResidual, [160, 960, 5, 1, 1, 1]],  # 15-p5/32
+  ]
+
+head:
+  [[-1, 1, Conv, [160, 1, 1]],
+   [-1, 1, nn.Upsample, [None, 2, 'nearest']],
+   [[-1, 13], 1, Concat, [1]],  # cat backbone P4
+   [-1, 1, C3, [320, False]],   # 19
+
+   [-1, 1, Conv, [320, 1, 1]],
+   [-1, 1, nn.Upsample, [None, 2, 'nearest']],
+   [[-1, 6], 1, Concat, [1]],   # cat backbone P3
+   [-1, 1, C3, [360, False]],   # 23 (P3/8-small)
+
+   [-1, 1, Conv, [360, 3, 2]],
+   [[-1, 20], 1, Concat, [1]],  # cat head P4
+   [-1, 1, C3, [680, False]],   # 26 (P4/16-medium)
+
+   [-1, 1, Conv, [680, 3, 2]],
+   [[-1, 16], 1, Concat, [1]],  # cat head P5
+   [-1, 1, C3, [840, False]],   # 29 (P5/32-large)
+
+   [[23, 26, 29], 1, Detect, [nc, anchors]],  # Detect(P3, P4, P5)
+  ]
+

@@ -17,21 +17,20 @@ import pandas as pd
 import requests
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import yaml
 from PIL import Image
+from torch.autograd import Function
 from torch.cuda import amp
+from torch.nn import Softmax
+from torch.nn import init
+from torch.nn.parameter import Parameter
 
 from utils.dataloaders import exif_transpose, letterbox
 from utils.general import (LOGGER, check_requirements, check_suffix, check_version, colorstr, increment_path,
                            make_divisible, non_max_suppression, scale_coords, xywh2xyxy, xyxy2xywh)
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import copy_attr, time_sync
-import torch.nn.functional as F
-
-from torch.nn import init
-from torch.nn.parameter import Parameter
-from torch.nn import Softmax
-from torch.autograd import Function
 
 
 def autopad(k, p=None):  # kernel, padding
@@ -78,16 +77,24 @@ class DWConv(Conv):
 
 # ——————————————————————————————Inception_Conv ——————————————————————————————
 class Inception_Conv(nn.Module):
-
-    def __init__(self, c1, c2, k=3, s=2, g=1, p=None):  # ch_in, ch_out, kernel, stride, padding, groups
+    # Inception Conv
+    def __init__(self, c1, c2, k=3, s=2, g=1, p=None, act=True):  # ch_in, ch_out, kernel, stride, padding, groups
         super().__init__()
 
         self.conv1 = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=False)
         self.conv2 = nn.Conv2d(c1, c2, k, s, autopad(k + 2, p), dilation=2, groups=g, bias=False)
+        self.bn = nn.BatchNorm2d(c2)
+        self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
 
     def forward(self, x):
-        x1 = self.conv1(x)
-        x2 = self.conv2(x)
+        x1 = self.act(self.bn(self.conv1(x)))
+        x2 = self.act(self.bn(self.conv2(x)))
+        x = torch.add(x1, x2)
+        return x
+
+    def forward_fuse(self, x):
+        x1 = self.act(self.conv1(x))
+        x2 = self.act(self.conv2(x))
         x = torch.add(x1, x2)
         return x
 
@@ -802,23 +809,18 @@ class SpatialAttention(nn.Module):
         super(SpatialAttention, self).__init__()
         assert kernel_size in (3, 7), 'kernel size must be 3 or 7'
         padding = 3 if kernel_size == 7 else 1
-        # (特征图的大小-算子的size+2*padding)/步长+1
         self.conv = nn.Conv2d(2, 1, kernel_size, padding=padding, bias=False)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        # 1*h*w
         avg_out = torch.mean(x, dim=1, keepdim=True)
         max_out, _ = torch.max(x, dim=1, keepdim=True)
         x = torch.cat([avg_out, max_out], dim=1)
-        # 2*h*w
         x = self.conv(x)
-        # 1*h*w
         return self.sigmoid(x)
 
 
 class CBAM(nn.Module):
-    # CSP Bottleneck with 3 convolutions
     def __init__(self, c1, c2, ratio=16, kernel_size=7):  # ch_in, ch_out, number, shortcut, groups, expansion
         super(CBAM, self).__init__()
         self.channel_attention = ChannelAttention(c1, ratio)
@@ -826,20 +828,12 @@ class CBAM(nn.Module):
 
     def forward(self, x):
         out = self.channel_attention(x) * x
-        # c*h*w
-        # c*h*w * 1*h*w
         out = self.spatial_attention(out) * out
         return out
 
 
 # —————————————————————————————— ECA ——————————————————————————————
 class ECA(nn.Module):
-    """Constructs a ECA module.
-    Args:
-        channel: Number of channels of the input feature map
-        k_size: Adaptive selection of kernel size
-    """
-
     def __init__(self, c1, c2, k_size=3):
         super(ECA, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
@@ -847,17 +841,8 @@ class ECA(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        # feature descriptor on the global spatial information
         y = self.avg_pool(x)
-
-        # print(y.shape,y.squeeze(-1).shape,y.squeeze(-1).transpose(-1, -2).shape)
-        # Two different branches of ECA module
-        # 50*C*1*1
-        # 50*C*1
-        # 50*1*C
         y = self.conv(y.squeeze(-1).transpose(-1, -2)).transpose(-1, -2).unsqueeze(-1)
-
-        # Multi-scale information fusion
         y = self.sigmoid(y)
 
         return x * y.expand_as(x)
@@ -897,13 +882,9 @@ class CoordAtt(nn.Module):
     def forward(self, x):
         identity = x
         n, c, h, w = x.size()
-        # c*1*W
         x_h = self.pool_h(x)
-        # c*H*1
-        # C*1*h
         x_w = self.pool_w(x).permute(0, 1, 3, 2)
         y = torch.cat([x_h, x_w], dim=2)
-        # C*1*(h+w)
         y = self.conv1(y)
         y = self.bn1(y)
         y = self.act(y)
@@ -960,7 +941,6 @@ class SEBottleneck(nn.Module):
         self.cv1 = Conv(c1, c_, 1, 1)
         self.cv2 = Conv(c_, c2, 3, 1, g=g)
         self.add = shortcut and c1 == c2
-        # self.se=SE(c1,c2,ratio)
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         self.l1 = nn.Linear(c1, c1 // ratio, bias=False)
         self.relu = nn.ReLU(inplace=True)
@@ -978,7 +958,6 @@ class SEBottleneck(nn.Module):
         y = y.view(b, c, 1, 1)
         out = x1 * y.expand_as(x1)
 
-        # out=self.se(x1)*x1
         return x + out if self.add else out
 
 
@@ -992,7 +971,6 @@ class C3SE(C3):
 
 # —————————————————————————————— C3CA ——————————————————————————————
 class CABottleneck(nn.Module):
-    # Standard bottleneck
     def __init__(self, c1, c2, shortcut=True, g=1, e=0.5, ratio=32):  # ch_in, ch_out, shortcut, groups, expansion
         super().__init__()
         c_ = int(c2 * e)  # hidden channels
@@ -1012,13 +990,9 @@ class CABottleneck(nn.Module):
     def forward(self, x):
         x1 = self.cv2(self.cv1(x))
         n, c, h, w = x.size()
-        # c*1*W
         x_h = self.pool_h(x1)
-        # c*H*1
-        # C*1*h
         x_w = self.pool_w(x1).permute(0, 1, 3, 2)
         y = torch.cat([x_h, x_w], dim=2)
-        # C*1*(h+w)
         y = self.conv1(y)
         y = self.bn1(y)
         y = self.act(y)
@@ -1028,7 +1002,6 @@ class CABottleneck(nn.Module):
         a_w = self.conv_w(x_w).sigmoid()
         out = x1 * a_w * a_h
 
-        # out=self.ca(x1)*x1
         return x + out if self.add else out
 
 
@@ -1042,7 +1015,6 @@ class C3CA(C3):
 
 # —————————————————————————————— C3CBAM ——————————————————————————————
 class CBAMBottleneck(nn.Module):
-    # Standard bottleneck
     def __init__(self, c1, c2, shortcut=True, g=1, e=0.5, ratio=16,
                  kernel_size=7):  # ch_in, ch_out, shortcut, groups, expansion
         super(CBAMBottleneck, self).__init__()
@@ -1052,12 +1024,10 @@ class CBAMBottleneck(nn.Module):
         self.add = shortcut and c1 == c2
         self.channel_attention = ChannelAttention(c2, ratio)
         self.spatial_attention = SpatialAttention(kernel_size)
-        # self.cbam=CBAM(c1,c2,ratio,kernel_size)
 
     def forward(self, x):
         x1 = self.cv2(self.cv1(x))
         out = self.channel_attention(x1) * x1
-        # print('outchannels:{}'.format(out.shape))
         out = self.spatial_attention(out) * out
         return x + out if self.add else out
 
@@ -1072,7 +1042,6 @@ class C3CBAM(C3):
 
 # —————————————————————————————— C3ECA ——————————————————————————————
 class ECABottleneck(nn.Module):
-    # Standard bottleneck
     def __init__(self, c1, c2, shortcut=True, g=1, e=0.5, ratio=16,
                  k_size=3):  # ch_in, ch_out, shortcut, groups, expansion
         super().__init__()
@@ -1080,14 +1049,12 @@ class ECABottleneck(nn.Module):
         self.cv1 = Conv(c1, c_, 1, 1)
         self.cv2 = Conv(c_, c2, 3, 1, g=g)
         self.add = shortcut and c1 == c2
-        # self.eca=ECA(c1,c2)
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.conv = nn.Conv1d(1, 1, kernel_size=k_size, padding=(k_size - 1) // 2, bias=False)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x1 = self.cv2(self.cv1(x))
-        # out=self.eca(x1)*x1
         y = self.avg_pool(x1)
         y = self.conv(y.squeeze(-1).transpose(-1, -2)).transpose(-1, -2).unsqueeze(-1)
         y = self.sigmoid(y)
@@ -1863,3 +1830,243 @@ class SOCA(nn.Module):
         cov_mat_sum = cov_mat_sum.view(batch_size, C, 1, 1)
         y_cov = self.conv_du(cov_mat_sum)
         return y_cov * x
+
+
+class SeBlock(nn.Module):
+    def __init__(self, in_channel, reduction=4):
+        super().__init__()
+        self.Squeeze = nn.AdaptiveAvgPool2d(1)
+
+        self.Excitation = nn.Sequential()
+        self.Excitation.add_module('FC1', nn.Conv2d(in_channel, in_channel // reduction, kernel_size=1))  # 1*1卷积与此效果相同
+        self.Excitation.add_module('ReLU', nn.ReLU())
+        self.Excitation.add_module('FC2', nn.Conv2d(in_channel // reduction, in_channel, kernel_size=1))
+        self.Excitation.add_module('Sigmoid', nn.Sigmoid())
+
+    def forward(self, x):
+        y = self.Squeeze(x)
+        ouput = self.Excitation(y)
+        return x * (ouput.expand_as(x))
+
+class G_bneck(nn.Module):
+    # Ghost Bottleneck https://github.com/huawei-noah/ghostnet
+    def __init__(self, c1, c2, midc, k=5, s=1, use_se = False):  # ch_in, ch_mid, ch_out, kernel, stride, use_se
+        super().__init__()
+        assert s in [1, 2]
+        c_ = midc
+        self.conv = nn.Sequential(GhostConv(c1, c_, 1, 1),              # Expansion
+                                  Conv(c_, c_, 3, s=2, p=1, g=c_, act=False) if s == 2 else nn.Identity(),  # dw
+                                  # Squeeze-and-Excite
+                                  SeBlock(c_) if use_se else nn.Sequential(),
+                                  GhostConv(c_, c2, 1, 1, act=False))   # Squeeze pw-linear
+
+        self.shortcut = nn.Identity() if (c1 == c2 and s == 1) else \
+                                                nn.Sequential(Conv(c1, c1, 3, s=s, p=1, g=c1, act=False), \
+                                                Conv(c1, c2, 1, 1, act=False)) # 避免stride=2时 通道数改变的情况
+
+    def forward(self, x):
+        # print(self.conv(x).shape)
+        # print(self.shortcut(x).shape)
+        return self.conv(x) + self.shortcut(x)
+
+
+class DepthSepConv(nn.Module):
+    def __init__(self, inp, oup, dw_size, stride, use_se):
+        super(DepthSepConv, self).__init__()
+        self.stride = stride
+        self.inp = inp
+        self.oup = oup
+        self.dw_size = dw_size
+        self.dw_sp = nn.Sequential(
+            nn.Conv2d(self.inp, self.inp, kernel_size=self.dw_size, stride=self.stride, padding=(dw_size - 1) // 2, groups=self.inp, bias=False),
+            nn.BatchNorm2d(self.inp),
+            nn.Hardswish(),
+
+            SeBlock(self.inp, reduction=16) if use_se else nn.Sequential(),
+
+            nn.Conv2d(self.inp, self.oup, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(self.oup),
+            nn.Hardswish())
+
+    def forward(self, x):
+        y = self.dw_sp(x)
+        return y
+
+
+# EfficientNetLite
+class drop_connect:
+    def __init__(self, drop_connect_rate):
+        self.drop_connect_rate = drop_connect_rate
+
+    def forward(self, x, training):
+        if not training:
+            return x
+        keep_prob = 1.0 - self.drop_connect_rate
+        batch_size = x.shape[0]
+        random_tensor = keep_prob
+        random_tensor += torch.rand([batch_size, 1, 1, 1], dtype=x.dtype, device=x.device)
+        binary_mask = torch.floor(random_tensor)  # 1
+        x = (x / keep_prob) * binary_mask
+        return x
+
+
+class stem(nn.Module):
+    def __init__(self, c1, c2, act='ReLU6'):
+        super().__init__()
+        self.conv = nn.Conv2d(c1, c2, kernel_size=3, stride=2, padding=1, bias=False)
+        self.bn = nn.BatchNorm2d(num_features=c2)
+        if act == 'ReLU6':
+            self.act = nn.ReLU6(inplace=True)
+
+    def forward(self, x):
+        return self.act(self.bn(self.conv(x)))
+
+
+class MBConvBlock(nn.Module):
+    def __init__(self, inp, final_oup, k, s, expand_ratio, drop_connect_rate, has_se=False):
+        super(MBConvBlock, self).__init__()
+
+        self._momentum = 0.01
+        self._epsilon = 1e-3
+        self.input_filters = inp
+        self.output_filters = final_oup
+        self.stride = s
+        self.expand_ratio = expand_ratio
+        self.has_se = has_se
+        self.id_skip = True  # skip connection and drop connect
+        se_ratio = 0.25
+
+        # Expansion phase
+        oup = inp * expand_ratio  # number of output channels
+        if expand_ratio != 1:
+            self._expand_conv = nn.Conv2d(in_channels=inp, out_channels=oup, kernel_size=1, bias=False)
+            self._bn0 = nn.BatchNorm2d(num_features=oup, momentum=self._momentum, eps=self._epsilon)
+
+        # Depthwise convolution phase
+        self._depthwise_conv = nn.Conv2d(
+            in_channels=oup, out_channels=oup, groups=oup,  # groups makes it depthwise
+            kernel_size=k, padding=(k - 1) // 2, stride=s, bias=False)
+        self._bn1 = nn.BatchNorm2d(num_features=oup, momentum=self._momentum, eps=self._epsilon)
+
+        # Squeeze and Excitation layer, if desired
+        if self.has_se:
+            num_squeezed_channels = max(1, int(inp * se_ratio))
+            self.se = SeBlock(oup, 4)
+
+        # Output phase
+        self._project_conv = nn.Conv2d(in_channels=oup, out_channels=final_oup, kernel_size=1, bias=False)
+        self._bn2 = nn.BatchNorm2d(num_features=final_oup, momentum=self._momentum, eps=self._epsilon)
+        self._relu = nn.ReLU6(inplace=True)
+
+        self.drop_connect = drop_connect(drop_connect_rate)
+
+    def forward(self, x, drop_connect_rate=None):
+        """
+        :param x: input tensor
+        :param drop_connect_rate: drop connect rate (float, between 0 and 1)
+        :return: output of block
+        """
+
+        # Expansion and Depthwise Convolution
+        identity = x
+        if self.expand_ratio != 1:
+            x = self._relu(self._bn0(self._expand_conv(x)))
+        x = self._relu(self._bn1(self._depthwise_conv(x)))
+
+        # Squeeze and Excitation
+        if self.has_se:
+            x = self.se(x)
+
+        x = self._bn2(self._project_conv(x))
+
+        # Skip connection and drop connect
+        if self.id_skip and self.stride == 1 and self.input_filters == self.output_filters:
+            if drop_connect_rate:
+                x = self.drop_connect(x, training=self.training)
+            x += identity  # skip connection
+        return x
+
+
+# Mobilenetv3Small
+class SeBlock(nn.Module):
+    def __init__(self, in_channel, reduction=4):
+        super().__init__()
+        self.Squeeze = nn.AdaptiveAvgPool2d(1)
+
+        self.Excitation = nn.Sequential()
+        self.Excitation.add_module('FC1', nn.Conv2d(in_channel, in_channel // reduction, kernel_size=1))  # 1*1卷积与此效果相同
+        self.Excitation.add_module('ReLU', nn.ReLU())
+        self.Excitation.add_module('FC2', nn.Conv2d(in_channel // reduction, in_channel, kernel_size=1))
+        self.Excitation.add_module('Sigmoid', nn.Sigmoid())
+
+    def forward(self, x):
+        y = self.Squeeze(x)
+        ouput = self.Excitation(y)
+        return x * (ouput.expand_as(x))
+
+
+class Conv_BN_HSwish(nn.Module):
+    """
+    This equals to
+    def conv_3x3_bn(inp, oup, stride):
+        return nn.Sequential(
+            nn.Conv2d(inp, oup, 3, stride, 1, bias=False),
+            nn.BatchNorm2d(oup),
+            h_swish()
+        )
+    """
+
+    def __init__(self, c1, c2, stride):
+        super(Conv_BN_HSwish, self).__init__()
+        self.conv = nn.Conv2d(c1, c2, 3, stride, 1, bias=False)
+        self.bn = nn.BatchNorm2d(c2)
+        self.act = nn.Hardswish()
+
+    def forward(self, x):
+        return self.act(self.bn(self.conv(x)))
+
+
+class MobileNetV3_InvertedResidual(nn.Module):
+    def __init__(self, inp, oup, hidden_dim, kernel_size, stride, use_se, use_hs):
+        super(MobileNetV3_InvertedResidual, self).__init__()
+        assert stride in [1, 2]
+
+        self.identity = stride == 1 and inp == oup
+
+        if inp == hidden_dim:
+            self.conv = nn.Sequential(
+                # dw
+                nn.Conv2d(hidden_dim, hidden_dim, kernel_size, stride, (kernel_size - 1) // 2, groups=hidden_dim,
+                          bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                nn.Hardswish() if use_hs else nn.ReLU(),
+                # Squeeze-and-Excite
+                SeBlock(hidden_dim) if use_se else nn.Sequential(),
+                # pw-linear
+                nn.Conv2d(hidden_dim, oup, 1, 1, 0, bias=False),
+                nn.BatchNorm2d(oup),
+            )
+        else:
+            self.conv = nn.Sequential(
+                # pw
+                nn.Conv2d(inp, hidden_dim, 1, 1, 0, bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                nn.Hardswish() if use_hs else nn.ReLU(),
+                # dw
+                nn.Conv2d(hidden_dim, hidden_dim, kernel_size, stride, (kernel_size - 1) // 2, groups=hidden_dim,
+                          bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                # Squeeze-and-Excite
+                SeBlock(hidden_dim) if use_se else nn.Sequential(),
+                nn.Hardswish() if use_hs else nn.ReLU(),
+                # pw-linear
+                nn.Conv2d(hidden_dim, oup, 1, 1, 0, bias=False),
+                nn.BatchNorm2d(oup),
+            )
+
+    def forward(self, x):
+        y = self.conv(x)
+        if self.identity:
+            return x + y
+        else:
+            return y
