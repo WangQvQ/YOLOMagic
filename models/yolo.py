@@ -374,7 +374,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                  SE, CBAM, ECA, CoordAtt,
                  C3CA, C3ECA, C3CBAM, C3SE,
                  Inception_Conv, nn.ConvTranspose2d, CARAFE, CBRM, Shuffle_Block,
-                 ASPP, BasicRFB, SPPCSPC, SPPCSPC_group,
+                 ASPP, BasicRFB, SPPCSPC, SPPCSPC_group, SPPFCSPC,
                  C3_CoordAtt_Attention, C3_SE_Attention, C3_ECA_Attention, C3_CBAM_Attention,
                  G_bneck, DepthSepConv, stem, MBConvBlock, Conv_BN_HSwish, MobileNetV3_InvertedResidual
                  ):
