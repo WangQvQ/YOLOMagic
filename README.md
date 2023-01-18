@@ -66,6 +66,7 @@
 24. [YOLOv5更换骨干网络之 EfficientNet-B0](https://yolov5.blog.csdn.net/article/details/128522888)🍀
 25. [YOLOv5更换骨干网络之 MobileNet V3](https://yolov5.blog.csdn.net/article/details/128522041)🍀
 26. [YOLOv5更换骨干网络之 GhostNet](https://yolov5.blog.csdn.net/article/details/128523623)🍀
+27. [YOLOv5 引入 最新 BiFusion Neck](http://t.csdn.cn/khnmN)🍀
 ------
 
 
