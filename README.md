@@ -21,53 +21,55 @@
 ## Tutorial on How to Improve
 
 
-1. [手把手带你调参Yolo v5 (v6.2)（推理）](https://blog.csdn.net/weixin_43694096/article/details/124378167)🌟强烈推荐
+1. [手把手带你调参YOLOv5 (v5.0-v7.0)（推理）](http://t.csdn.cn/lalqs)🌟强烈推荐
 
-2. [手把手带你调参Yolo v5 (v6.2)（训练）](https://blog.csdn.net/weixin_43694096/article/details/124411509?spm=1001.2014.3001.5502)🚀
+2. [手把手带你调参YOLOv5 (v5.0-v7.0)（训练）](http://t.csdn.cn/YCQ3K)🚀
 
+3. [手把手带你调参YOLOv5 (v5.0-v7.0)（验证）](http://t.csdn.cn/NmnCz)
 
-3. [手把手带你调参Yolo v5 (v6.2)（验证）](https://yolov5.blog.csdn.net/article/details/126630836)
+4. [简单三步 用YOLOv5快速训练自己的数据集](http://t.csdn.cn/dw9Ry)
 
+5. [手把手带你YOLOv5/v7 (v5.0-v7.0)添加注意力机制(一)（并附上30多种顶会Attention原理图）](http://t.csdn.cn/YupOX)🌟强烈推荐🍀新增8种
 
-4. [如何快速使用自己的数据集训练Yolov5模型](https://blog.csdn.net/weixin_43694096/article/details/124457787)
+6. [手把手带你YOLOv5/v7 (v5.0-v7.0)添加注意力机制(二)（在C3模块中加入注意力机制）](http://t.csdn.cn/nz8WT)
 
-5. [手把手带你Yolov5 (v6.2)添加注意力机制(一)（并附上30多种顶会Attention原理图）](https://blog.csdn.net/weixin_43694096/article/details/124443059?spm=1001.2014.3001.5502)🌟强烈推荐🍀新增8种
+7. [YOLOv5/v7 如何更换激活函数？](http://t.csdn.cn/8UcSs)
 
-6. [手把手带你Yolov5 (v6.2)添加注意力机制(二)（在C3模块中加入注意力机制）](https://blog.csdn.net/weixin_43694096/article/details/124695537)
+8. [YOLOv5 如何更换BiFPN? ](http://t.csdn.cn/7wzQv)
 
-7. [Yolov5如何更换激活函数？](https://blog.csdn.net/weixin_43694096/article/details/124413941?spm=1001.2014.3001.5502)
+9. [YOLOv5 数据增强方式解析](http://t.csdn.cn/cGpDO)
 
-8. [Yolov5如何更换BiFPN? ](https://yolov5.blog.csdn.net/article/details/125148552)
+10. [YOLOv5/v7 更换上采样方式( 最近邻 / 双线性 / 双立方 / 三线性 / 转置卷积)](http://t.csdn.cn/vbaec)
 
-9. [Yolov5 (v6.2)数据增强方式解析](https://blog.csdn.net/weixin_43694096/article/details/124741952?spm=1001.2014.3001.5502)
+11. [YOLOv5/v7 如何更换EIOU / alpha IOU / SIoU？](http://t.csdn.cn/1Fgll)
 
-10. [Yolov5更换上采样方式( 最近邻 / 双线性 / 双立方 / 三线性 / 转置卷积)](https://blog.csdn.net/weixin_43694096/article/details/125416120)
+12. [YOLOv5/v7 应用轻量级通用上采样算子CARAFE](http://t.csdn.cn/4lj50)
 
-11. [Yolov5如何更换EIOU / alpha IOU / SIoU？](https://blog.csdn.net/weixin_43694096/article/details/124902685)
+13. [空间金字塔池化改进 SPP / SPPF / SimSPPF / ASPP / RFB / SPPCSPC / SPPFCSPC](http://t.csdn.cn/IAq5X)🚀
 
-12. [Yolov5更换主干网络之《旷视轻量化卷积神经网络ShuffleNetv2》](https://blog.csdn.net/weixin_43694096/article/details/126109839?spm=1001.2014.3001.5501)
+14. [用于低分辨率图像和小物体的模块SPD-Conv](http://t.csdn.cn/NJRUA)
 
-13. [YOLOv5应用轻量级通用上采样算子CARAFE](https://blog.csdn.net/weixin_43694096/article/details/126148795)
+15. [GSConv+Slim-neck 减轻模型的复杂度同时提升精度](http://t.csdn.cn/wzRi0)
 
-14. [空间金字塔池化改进 SPP / SPPF / SimSPPF / ASPP / RFB / SPPCSPC / SPPFCSPC](https://blog.csdn.net/weixin_43694096/article/details/126354660?spm=1001.2014.3001.5502)🚀
+16. [头部解耦 | 将YOLOX解耦头添加到YOLOv5 | 涨点杀器](http://t.csdn.cn/tIPgX)
 
-15. [用于低分辨率图像和小物体的模块SPD-Conv](https://blog.csdn.net/weixin_43694096/article/details/126398068)
+17. [Stand-Alone Self-Attention | 搭建纯注意力FPN+PAN结构](http://t.csdn.cn/v2Xni)
 
-16. [GSConv+Slim-neck 减轻模型的复杂度同时提升精度](https://blog.csdn.net/weixin_43694096/article/details/127344636?spm=1001.2014.3001.5501)🍀
-
-17. [头部解耦 | 将YOLOX解耦头添加到YOLOv5 | 涨点杀器](https://yolov5.blog.csdn.net/article/details/127427578)🍀
-
-18. [Stand-Alone Self-Attention | 搭建纯注意力FPN+PAN结构](https://yolov5.blog.csdn.net/article/details/127456629?spm=1001.2014.3001.5502)🍀
-19. [YOLOv5模型剪枝实战](https://yolov5.blog.csdn.net/article/details/127576130)🚀
-20. [YOLOv5知识蒸馏实战](https://yolov5.blog.csdn.net/article/details/127576321)🚀
-21. [YOLOv7知识蒸馏实战](https://yolov5.blog.csdn.net/article/details/127943886)🚀
-22. [改进YOLOv5 | 引入密集连接卷积网络DenseNet思想 | 搭建密集连接模块](https://blog.csdn.net/weixin_43694096/article/details/128500041?spm=1001.2014.3001.5501)🍀
-23. [YOLOv5更换骨干网络之 PP-LCNet](https://yolov5.blog.csdn.net/article/details/128523175)🍀
-24. [YOLOv5更换骨干网络之 EfficientNet-B0](https://yolov5.blog.csdn.net/article/details/128522888)🍀
-25. [YOLOv5更换骨干网络之 MobileNet V3](https://yolov5.blog.csdn.net/article/details/128522041)🍀
-26. [YOLOv5更换骨干网络之 GhostNet](https://yolov5.blog.csdn.net/article/details/128523623)🍀
-27. [YOLOv5 引入 最新 BiFusion Neck](http://t.csdn.cn/khnmN)🍀
-28. [YOLOv5/v7 引入 YOLOv8 的 C2f 模块](http://t.csdn.cn/cis6X)🍀
+18. [改进YOLOv5/v7 | 引入密集连接卷积网络DenseNet思想 | 搭建密集连接模块](http://t.csdn.cn/yq3qD)
+19. [YOLOv5/v7 更换骨干网络之 PP-LCNet](http://t.csdn.cn/8vV0D)
+20. [YOLOv5/v7 更换骨干网络之 EfficientNet-B0](http://t.csdn.cn/5iNl3)
+21. [YOLOv5/v7 更换骨干网络之 MobileNet V3](http://t.csdn.cn/aXR9g)
+22. [YOLOv5/v7 更换骨干网络之 GhostNet](http://t.csdn.cn/qR7Go)
+23. [YOLOv5/v7 更换骨干网络之 ShuffleNetv2](http://t.csdn.cn/eEJRh)
+24. [YOLOv5/v7 引入 最新 BiFusion Neck](http://t.csdn.cn/nXjj1)🍀
+25. [YOLOv5/v7 引入 YOLOv8 的 C2f 模块](http://t.csdn.cn/VCZ3n)🍀
+26. [YOLOv5/v7 引入 RepVGG 重参数化模块](http://t.csdn.cn/ZfZBb)🍀
+27. [YOLOv5 模型剪枝实战✂️](http://t.csdn.cn/KgvsB)
+19. [YOLOv5 知识蒸馏实战⚗️](http://t.csdn.cn/nJYLj)
+20. [YOLOv7 知识蒸馏实战⚗️](http://t.csdn.cn/upFwG)
+21. [YOLOv5/v7 Falsk Web 部署💻](https://yolov5.blog.csdn.net/article/details/128787333)
+22. [YOLOv5/v7添加PyQt5页面📟](https://yolov5.blog.csdn.net/article/details/128787333)
+23. [YOLOv5 安卓部署📱](https://yolov5.blog.csdn.net/article/details/127610833) 
 ------
 
 
