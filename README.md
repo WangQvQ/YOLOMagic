@@ -12,7 +12,14 @@
                                 alt="迪菲赫尔曼">
                         </a>
 </center></div>
+🍀v2.0版本 正在调试中，支持更多改进，更多便利性优化，上手更简单，各种改进附带教学说明，将配置文件模板化，更适合新手，大家点点Star，过512我立马开源。
 
+![image](https://user-images.githubusercontent.com/58406737/219826108-701fd4b4-fd33-41f6-ba30-03db45230241.png)
+![image](https://user-images.githubusercontent.com/58406737/219826114-7401b671-5574-4f11-ba80-871431b8e2cb.png)
+![image](https://user-images.githubusercontent.com/58406737/219826118-0d2e49dc-ff6d-43cb-8193-0c120ef5c581.png)
+![image](https://user-images.githubusercontent.com/58406737/219826124-31abdfad-adb7-4b7d-9393-dfcb5e98d1bc.png)
+![image](https://user-images.githubusercontent.com/58406737/219826126-7f453dbf-53f2-4172-9866-944705053e30.png)
+![image](https://user-images.githubusercontent.com/58406737/219826130-b4a6aa8e-3aa0-4639-b3c4-ec8f8e337524.png)
 
 
 -----
