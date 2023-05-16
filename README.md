@@ -5,8 +5,7 @@
 ![image](https://user-images.githubusercontent.com/58406737/202331524-d57da9d4-bc93-492a-be05-4f5f4dcc9aab.png)
 
 
-<div align="center">       <img src="https://img.shields.io/badge/QQ%E4%BA%A4%E6%B5%81%E7%BE%A4-750560739-blue"
-                        alt="QQ交流群">
+<div align="center">      
                     <b><a href="https://github.com/WangQvQ/Yolov5_Magic">
                             <img src="https://img.shields.io/badge/%E8%BF%AA%E8%8F%B2%E8%B5%AB%E5%B0%94%E6%9B%BC-YOLO%20Magic-critical"
                                 alt="迪菲赫尔曼">
