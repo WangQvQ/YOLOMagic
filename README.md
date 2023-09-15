@@ -3,8 +3,8 @@
 
 ![image](https://github.com/WangQvQ/Yolov5_Magic/assets/58406737/24a7718c-2403-46b7-a81e-205ebeb9869e)
 [英文](README.md)|[简体中文](README.zh-CN.md)<br>
-
-  </div>
+ </div>
+ 
 YOLO Magic🚀是一个基于[Ultralytics](https://ultralytics.com) YOLOv5的扩展，旨在为视觉任务提供更强大的功能和更简单的操作。它在YOLOv5的基础上引入了丰富的网络模块，并提供了直观易用的Web操作界面，旨在为新手和专业用户提供更大的便利和灵活性。
 
 ## 主要特性
