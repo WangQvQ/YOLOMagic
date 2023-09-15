@@ -90,7 +90,7 @@ python train.py --data coco.yaml --epochs 300 --weights '' --cfg yolov5n.yaml  -
 
 ```bash
 python val.py --weights yolov5s.pt --task test
-										  val
+					  val
 ```
 
 ## 贡献
