@@ -23,7 +23,8 @@ YOLO Magic🚀通过直观的Web操作页面，大大简化了模型推理过程
 - **图片推理**：只需进行简单的拖放和配置，即可执行图片推理和目标检测。您可以自由调整置信度、阈值，上传图像并截取感兴趣的区域。
 - **视频推理**：TODO
 
-![image.png](ddd.assets/image.png)
+![image](https://github.com/WangQvQ/Yolov5_Magic/assets/58406737/94216ddb-4d84-4313-a759-7f84fd04c6b3)
+
 
 ## 为什么选择YOLO Magic🚀
 
