@@ -7,7 +7,6 @@ Usage:
 """
 
 import argparse
-import contextlib
 import os
 import platform
 import sys
@@ -330,6 +329,11 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                 n = 1
         elif m is nn.BatchNorm2d:
             args = [ch[f]]
+        elif m in [SimAM]:  # args
+            args = [*args[:]]
+        elif m in [SKAttention]:  # channels args
+            c2 = ch[f]
+            args = [c2, *args[0:]]
         elif m is Concat:
             c2 = sum(ch[x] for x in f)
         # TODO: channel, gw, gd

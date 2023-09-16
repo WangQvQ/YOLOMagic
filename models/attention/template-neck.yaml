@@ -1,18 +1,19 @@
 # YOLOv5 🚀 by Ultralytics, GPL-3.0 license
 # by CSDN 迪菲赫尔曼
 # [from, number, module,   args]
-# [  -1,      1, SE,      [128]],
-# [  -1,      1, CBAM,    [128]],
-# [  -1,      1, ECA,     [128]],
-# [  -1,      1, CoordAtt,[128]],
+# [  -1,      1, SE,      [channel]],
+# [  -1,      1, CBAM,    [channel]],
+# [  -1,      1, ECA,     [channel]],
+# [  -1,      1, CoordAtt,[channel]],
+# [  -1,      1, SimAM,   [1e-4]],
 # Parameters
 nc: 80  # number of classes
 depth_multiple: 0.33  # model depth multiple
 width_multiple: 0.50  # layer channel multiple
 anchors:
-  - [10,13, 16,30, 33,23]  # P3/8
-  - [30,61, 62,45, 59,119]  # P4/16
-  - [116,90, 156,198, 373,326]  # P5/32
+  - [ 10,13, 16,30, 33,23 ]  # P3/8
+  - [ 30,61, 62,45, 59,119 ]  # P4/16
+  - [ 116,90, 156,198, 373,326 ]  # P5/32
 
 # YOLOv5 v6.0 backbone
 backbone:
