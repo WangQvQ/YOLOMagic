@@ -22,6 +22,16 @@ if platform.system() != 'Windows':
 
 from models.common import *
 from models.experimental import *
+from models.layers.CA import CoordAtt
+from models.layers.CBAM import CBAM
+from models.layers.ECA import ECA
+from models.layers.EfficieNet import stem, MBConvBlock
+from models.layers.SE import SE
+from models.layers.ShuffleNet import CBRM, Shuffle_Block
+from models.layers.SimAM import SimAM
+from models.layers.SK import SKAttention
+from models.layers.SPP import SimSPPF, ASPP, BasicRFB, SPPCSPC, SPPFCSPC
+
 from utils.autoanchor import check_anchor_order
 from utils.general import LOGGER, check_version, check_yaml, make_divisible, print_args
 from utils.plots import feature_visualization
