@@ -1,11 +1,4 @@
 # YOLOv5 🚀 by Ultralytics, GPL-3.0 license
-# by CSDN 迪菲赫尔曼
-# [from, number, module,   args]
-# [  -1,      1, SE,      [channel]],
-# [  -1,      1, CBAM,    [channel]],
-# [  -1,      1, ECA,     [channel]],
-# [  -1,      1, CoordAtt,[channel]],
-# [  -1,      1, SimAM,   [1e-4]],
 # Parameters
 nc: 80 # number of classes
 depth_multiple: 0.33 # model depth multiple
